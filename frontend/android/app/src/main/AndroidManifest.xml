@@ -1,25 +1,25 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- İzinler -->
-    <!-- Kamera kullanacaksan -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.CAMERA" />
 
     <!-- Android 13+ (API 33+) için galeri okuma izni -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <!-- Android 12L ve önceki sürümler için (uyumluluk) -->
+    <!-- Eski cihazlar için uyumluluk (opsiyonel) -->
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
 
+    <!-- Genelde artık gerekmez; istersen kaldırabilirsin -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
-        android:label="cosmoscan1"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:label="cosmoscan1"
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true">
 
         <activity
             android:name=".MainActivity"
@@ -48,7 +48,7 @@
             android:value="2" />
     </application>
 
-    <!-- Process Text sorgu yetkisi (Flutter engine tarafından kullanılıyor) -->
+    <!-- (Opsiyonel) Process Text sorgu yetkisi -->
     <queries>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT" />

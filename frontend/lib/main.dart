@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'pages/home_page.dart';
+import 'services/ingredient_normalizer.dart';
 
 void main() {
   runApp(const MyApp());

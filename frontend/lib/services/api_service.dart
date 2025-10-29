@@ -1,22 +1,42 @@
 import 'package:dio/dio.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://10.0.2.2:8080'; // Android emülatör
-
+  //static const String baseUrl = 'http://10.0.2.2:8080'; // Android emülatör
+  static const String baseUrl = 'http://192.168.1.43:8080';
   final Dio _dio;
 
   ApiService()
-    : _dio = Dio(
-        BaseOptions(
-          baseUrl: baseUrl,
-          connectTimeout: const Duration(seconds: 30),
-          receiveTimeout: const Duration(seconds: 30),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-        ),
-      );
+      : _dio = Dio(
+          BaseOptions(
+            baseUrl: baseUrl,
+            connectTimeout: const Duration(seconds: 90),
+            receiveTimeout: const Duration(seconds: 90),
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+          ),
+        ) {
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          print('🌐 REQUEST: ${options.method} ${options.uri}');
+          print(
+              '📤 Data length: ${(options.data as List?)?.length ?? 0} items');
+          return handler.next(options);
+        },
+        onResponse: (response, handler) {
+          print('✅ RESPONSE: ${response.statusCode}');
+          return handler.next(response);
+        },
+        onError: (error, handler) {
+          print('❌ ERROR TYPE: ${error.type}');
+          print('❌ ERROR MESSAGE: ${error.message}');
+          return handler.next(error);
+        },
+      ),
+    );
+  }
 
   Future<Map<String, dynamic>> analyzeIngredients(
     List<String> ingredients,
@@ -33,14 +53,31 @@ class ApiService {
         throw Exception('Hata: ${response.statusCode}');
       }
     } on DioException catch (e) {
-      // Dio 5: DioError yerine DioException
+      // Bağlantı hatası detayları
+      if (e.type == DioExceptionType.connectionTimeout) {
+        throw Exception(
+          'Bağlantı zaman aşımı. Backend çalışıyor mu?\n'
+          'URL: $baseUrl\n'
+          'IP adresinizi kontrol edin.',
+        );
+      } else if (e.type == DioExceptionType.connectionError) {
+        throw Exception(
+          'Bağlantı hatası!\n'
+          '1. Backend çalışıyor mu?\n'
+          '2. IP doğru mu? ($baseUrl)\n'
+          '3. Firewall kapalı mı?\n'
+          '4. Aynı ağda mısınız?\n\n'
+          'Hata: ${e.message}',
+        );
+      }
+
       final status = e.response?.statusCode;
       final data = e.response?.data;
       throw Exception(
-        'İstek hatası (${status ?? 'unknown'}): ${e.message} ${data ?? ''}',
+        'API hatası (${status ?? 'bilinmiyor'}): ${data ?? e.message}',
       );
     } catch (e) {
-      throw Exception('Bilinmeyen hata: $e');
+      throw Exception('Beklenmeyen hata: $e');
     }
   }
 
@@ -57,8 +94,7 @@ class ApiService {
           final Map<String, dynamic>? chemical =
               item['chemical'] as Map<String, dynamic>?;
 
-          final bool isHarmful =
-              (chemical?['harmful'] as bool?) ??
+          final bool isHarmful = (chemical?['harmful'] as bool?) ??
               message.toLowerCase().contains('harmful');
 
           final record = {

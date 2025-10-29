@@ -9,6 +9,7 @@ import '../../services/api_service.dart';
 import '../../services/ocr_service.dart';
 import '../../services/camera_service.dart';
 import 'result_page.dart';
+import '../../services/ingredient_normalizer.dart';
 
 class CosmoscanHomePage extends StatefulWidget {
   const CosmoscanHomePage({super.key});
@@ -35,18 +36,18 @@ class _CosmoscanHomePageState extends State<CosmoscanHomePage> {
     showModalBottomSheet(
       context: context,
       builder: (context) => Container(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
+            const Text(
               'Fotoğraf Seç',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ListTile(
-              leading: Icon(Icons.camera_alt, color: Colors.blue),
-              title: Text('Kamera ile Çek'),
+              leading: const Icon(Icons.camera_alt, color: Colors.blue),
+              title: const Text('Kamera ile Çek'),
               onTap: () async {
                 Navigator.pop(context);
                 final file = await cameraService.capturePhoto();
@@ -56,8 +57,8 @@ class _CosmoscanHomePageState extends State<CosmoscanHomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.photo_library, color: Colors.blue),
-              title: Text('Galeriden Seç'),
+              leading: const Icon(Icons.photo_library, color: Colors.blue),
+              title: const Text('Galeriden Seç'),
               onTap: () async {
                 Navigator.pop(context);
                 final file = await cameraService.pickFromGallery();
@@ -79,7 +80,7 @@ class _CosmoscanHomePageState extends State<CosmoscanHomePage> {
         pageBuilder: (context, animation, secondaryAnimation) =>
             LoadingPage(imageFile: imageFile),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          var begin = Offset(1.0, 0.0);
+          var begin = const Offset(1.0, 0.0);
           var end = Offset.zero;
           var curve = Curves.easeInOut;
           var tween =
@@ -94,9 +95,9 @@ class _CosmoscanHomePageState extends State<CosmoscanHomePage> {
   Widget _buildTextBoxWithBorder(String text) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.85,
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        image: DecorationImage(
+        image: const DecorationImage(
           image: AssetImage('assets/border.png'),
           fit: BoxFit.cover,
         ),
@@ -107,20 +108,15 @@ class _CosmoscanHomePageState extends State<CosmoscanHomePage> {
           text,
           textAlign: TextAlign.center,
           style: GoogleFonts.montserrat(
-            textStyle: TextStyle(
+            textStyle: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: const Color.fromARGB(255, 8, 32, 168),
+              color: Color.fromARGB(255, 8, 32, 168),
               shadows: [
                 Shadow(
                   blurRadius: 5.0,
                   offset: Offset(3.0, 3.0),
-                  color: const Color.fromARGB(
-                    255,
-                    31,
-                    190,
-                    218,
-                  ).withOpacity(0.3),
+                  color: Color.fromARGB(255, 31, 190, 218),
                 ),
               ],
             ),
@@ -136,7 +132,7 @@ class _CosmoscanHomePageState extends State<CosmoscanHomePage> {
       width: boxWidth,
       height: 150,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           colors: [Color(0xFFa1c4fd), Color(0xFFc2e9fb)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -144,10 +140,10 @@ class _CosmoscanHomePageState extends State<CosmoscanHomePage> {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Color(0xFF4062BD).withOpacity(0.3),
+            color: const Color(0xFF4062BD).withOpacity(0.3),
             blurRadius: 12,
             spreadRadius: 2,
-            offset: Offset(0, 6),
+            offset: const Offset(0, 6),
           ),
         ],
       ),
@@ -160,7 +156,7 @@ class _CosmoscanHomePageState extends State<CosmoscanHomePage> {
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.9),
               shape: BoxShape.circle,
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.black12,
                   blurRadius: 6,
@@ -173,13 +169,13 @@ class _CosmoscanHomePageState extends State<CosmoscanHomePage> {
               child: Image.asset(assetPath, fit: BoxFit.contain),
             ),
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Text(
               text,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 color: Color(0xFF4A4A58),
@@ -198,19 +194,19 @@ class _CosmoscanHomePageState extends State<CosmoscanHomePage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text('Cosmoscan', style: TextStyle(color: Colors.black87)),
+        title: const Text('Cosmoscan', style: TextStyle(color: Colors.black87)),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.account_circle, color: Colors.black87),
+            icon: const Icon(Icons.account_circle, color: Colors.black87),
             onPressed: () {},
           ),
         ],
-        iconTheme: IconThemeData(color: Colors.black87),
+        iconTheme: const IconThemeData(color: Colors.black87),
       ),
       drawer: Drawer(
         child: ListView(
-          children: <Widget>[
+          children: const <Widget>[
             DrawerHeader(child: Text('Menü')),
             ListTile(title: Text('Profil')),
             ListTile(title: Text('Ayarlar')),
@@ -245,7 +241,7 @@ class _CosmoscanHomePageState extends State<CosmoscanHomePage> {
                             height: 170,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              gradient: LinearGradient(
+                              gradient: const LinearGradient(
                                 colors: [Color(0xFFa1c4fd), Color(0xFFc2e9fb)],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
@@ -261,7 +257,7 @@ class _CosmoscanHomePageState extends State<CosmoscanHomePage> {
                           ),
                           AnimatedScale(
                             scale: _scale,
-                            duration: Duration(milliseconds: 200),
+                            duration: const Duration(milliseconds: 200),
                             child: Container(
                               width: 130,
                               height: 130,
@@ -276,7 +272,7 @@ class _CosmoscanHomePageState extends State<CosmoscanHomePage> {
                                   ),
                                 ],
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.camera_alt,
                                 color: Colors.blueAccent,
                                 size: 65,
@@ -286,7 +282,7 @@ class _CosmoscanHomePageState extends State<CosmoscanHomePage> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     _buildTextBoxWithBorder(
                       'İçerik listesini taramak için kamera simgesine tıklayın',
                     ),
@@ -333,7 +329,7 @@ class _CosmoscanHomePageState extends State<CosmoscanHomePage> {
             child: Container(
               width: 70, // Yuvarlak çerçeve boyutu
               height: 70,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle, // Yuvarlak şekil
                 gradient: LinearGradient(
                   colors: [
@@ -390,20 +386,21 @@ class _LoadingPageState extends State<LoadingPage> {
 
   Future<void> _processImage() async {
     try {
-      // Adım 1: OCR - Fotoğraftan yazı çıkart
       setState(() => _statusMessage = 'İçerik yazısı okunuyor...');
 
-      final ingredients = await _ocrService.extractText(widget.imageFile);
+      final rawIngredients = await _ocrService.extractText(widget.imageFile);
+      final ingredients =
+          IngredientNormalizer.normalizeIngredients(rawIngredients);
 
       if (ingredients.isEmpty) {
         throw Exception(
-          'Fotoğrafta yazı bulunamadı. Lütfen daha net bir fotoğraf çekin.',
+          'Fotoğrafta geçerli içerik bulunamadı. Lütfen daha net bir fotoğraf çekin.',
         );
       }
 
       setState(() => _statusMessage = 'İçerikler analiz ediliyor...');
 
-      // Adım 2: Backend'e gönder
+      // 2) API'ye gönder
       final result = await _apiService.analyzeIngredients(ingredients);
 
       if (mounted) {
@@ -420,11 +417,10 @@ class _LoadingPageState extends State<LoadingPage> {
           SnackBar(
             content: Text('Hata: $e'),
             backgroundColor: Colors.red,
-            duration: Duration(seconds: 4),
+            duration: const Duration(seconds: 4),
           ),
         );
-
-        Future.delayed(Duration(seconds: 2), () {
+        Future.delayed(const Duration(seconds: 2), () {
           if (mounted) Navigator.pop(context);
         });
       }
@@ -438,7 +434,7 @@ class _LoadingPageState extends State<LoadingPage> {
     return WillPopScope(
       onWillPop: () async => false, // Geri tuşunu engelle
       child: Scaffold(
-        backgroundColor: Color(0xFFF8F5F1),
+        backgroundColor: const Color(0xFFF8F5F1),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -449,7 +445,7 @@ class _LoadingPageState extends State<LoadingPage> {
                 height: 150,
                 fit: BoxFit.contain,
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Text(
                 _statusMessage,
                 style: TextStyle(
@@ -459,12 +455,13 @@ class _LoadingPageState extends State<LoadingPage> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               SizedBox(
                 width: 200,
                 child: LinearProgressIndicator(
                   backgroundColor: Colors.grey[300],
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurple),
+                  valueColor:
+                      const AlwaysStoppedAnimation<Color>(Colors.deepPurple),
                 ),
               ),
             ],
