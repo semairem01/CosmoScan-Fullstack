@@ -12,6 +12,10 @@ public class ChemicalService {
     @Autowired
     private ChemicalRepository chemicalRepository;
 
+    public long count() {
+        return chemicalRepository.count();
+    }
+
     public Optional<Chemical> findByName(String name){
         return chemicalRepository.findByNameIgnoreCase(name);
     }
